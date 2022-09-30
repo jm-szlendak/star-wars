@@ -2,6 +2,21 @@ import {
   IsString, IsAlphanumeric, IsOptional,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+
+export class EpisodeDto {
+  @ApiProperty()
+  @IsString()
+  @IsAlphanumeric()
+  name: string
+}
+
+export class PlanetDto {
+  @ApiProperty()
+  @IsString()
+  @IsAlphanumeric()
+  name: string
+}
 
 export class CreateOrUpdateCharacterDto {
   @ApiProperty()
@@ -9,14 +24,12 @@ export class CreateOrUpdateCharacterDto {
   @IsAlphanumeric()
   name: string
 
-  @ApiProperty({ isArray: true })
-  @IsString({ each: true })
-  @IsAlphanumeric()
-  episodes: string[]
+  @ApiProperty({ isArray: true, type: EpisodeDto })
+  @Type(() => EpisodeDto)
+  episodes: EpisodeDto[]
 
-  @ApiProperty()
+  @ApiProperty({ type: PlanetDto })
+  @Type(() => PlanetDto)
   @IsOptional()
-  @IsString()
-  @IsAlphanumeric()
-  planet: string | null
+  planet?: PlanetDto
 }

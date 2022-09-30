@@ -9,6 +9,11 @@ services:
       dockerfile: docker/Dockerfile
     environment:
       - PORT=3000
+      - MYSQL_HOST=mysql-8-dev
+      - MYSQL_PORT=3306
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=secret
+      - MYSQL_DATABASE=star_wars
     ports:
       - '3000:3000'
     volumes:
@@ -23,7 +28,7 @@ services:
     command: [ 'mysqld', '--binlog-rows-query-log-events', '--log-bin' ]
     environment:
       - MYSQL_ROOT_PASSWORD=secret
-      - MYSQL_DATABASE=starwars
+      - MYSQL_DATABASE=star_wars
     volumes:
       - ./docker/mysql-8-dev/init-scripts:/docker-entrypoint-initdb.d
       - ./docker/mysql-8-dev/configs/my.cnf:/etc/mysql/my.cnf
