@@ -1,0 +1,31 @@
+version: '3.7'
+services:
+  star-wars:
+    container_name: star-wars
+    image: star-wars:development
+    build:
+      context: .
+      target: development
+      dockerfile: docker/Dockerfile
+    environment:
+      - PORT=3000
+    ports:
+      - '3000:3000'
+    volumes:
+      - /home/node/star-wars/node_modules
+      - ./:/home/node/star-wars:rw
+    command: 'npm run start:dev'
+    depends_on:
+      - mysql-8-dev
+  mysql-8-dev:
+    container_name: mysql-8-dev
+    image: mysql:8.0.19
+    command: [ 'mysqld', '--binlog-rows-query-log-events', '--log-bin' ]
+    environment:
+      - MYSQL_ROOT_PASSWORD=secret
+      - MYSQL_DATABASE=starwars
+    volumes:
+      - ./docker/mysql-8-dev/init-scripts:/docker-entrypoint-initdb.d
+      - ./docker/mysql-8-dev/configs/my.cnf:/etc/mysql/my.cnf
+    ports:
+      - '33062:3306'
