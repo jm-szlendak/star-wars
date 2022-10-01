@@ -7,33 +7,43 @@ export class SetupDatabase11664566179202 implements MigrationInterface {
         (
             name varchar(500) NOT NULL,
             PRIMARY KEY (name)
-        ) ENGINE=InnoDB;
+        ) ENGINE=InnoDB;`);
+    await queryRunner.query(`
         CREATE TABLE planet_entity
         (
             name varchar(500) NOT NULL,
             PRIMARY KEY (name)
-        ) ENGINE=InnoDB;
+        ) ENGINE=InnoDB;`);
+    await queryRunner.query(`
         CREATE TABLE character_entity
         (
             id         int          NOT NULL AUTO_INCREMENT,
             name       varchar(500) NOT NULL,
             planetName varchar(500) NULL,
+            deleted    timestamp    NULL,
             PRIMARY KEY (id)
-        ) ENGINE=InnoDB;
+        ) ENGINE=InnoDB;`);
+    await queryRunner.query(`
         CREATE TABLE character_episode
         (
             characterEntityId int          NOT NULL,
             episodeEntityName varchar(500) NOT NULL,
-            INDEX                 IDX_d4ecba0d19e32b8b408821fe86 (characterEntityId),
-            INDEX                 IDX_997db54d46ba7bf7c4842ab00e (episodeEntityName),
+            INDEX             idx_character_episode_character_id (characterEntityId),
+            INDEX             idx_character_episode_episode_id (episodeEntityName),
             PRIMARY KEY (characterEntityId, episodeEntityName)
         ) ENGINE=InnoDB;
+    `);
+    await queryRunner.query(`
         ALTER TABLE character_entity
-            ADD CONSTRAINT FK_a920b9b77fccae35db7a3025abc FOREIGN KEY (planetName) REFERENCES planet_entity (name) ON DELETE NO ACTION ON UPDATE NO ACTION;
+            ADD CONSTRAINT fk_character_planet FOREIGN KEY (planetName) REFERENCES planet_entity (name) ON DELETE NO ACTION ON UPDATE CASCADE;
+    `);
+    await queryRunner.query(`
         ALTER TABLE character_episode
-            ADD CONSTRAINT FK_d4ecba0d19e32b8b408821fe867 FOREIGN KEY (characterEntityId) REFERENCES character_entity (id) ON DELETE CASCADE ON UPDATE CASCADE;
+            ADD CONSTRAINT fk_character_episode_character FOREIGN KEY (characterEntityId) REFERENCES character_entity (id) ON DELETE CASCADE ON UPDATE CASCADE;
+    `);
+    await queryRunner.query(`
         ALTER TABLE character_episode
-            ADD CONSTRAINT FK_997db54d46ba7bf7c4842ab00ed FOREIGN KEY (episodeEntityName) REFERENCES episode_entity (name) ON DELETE CASCADE ON UPDATE CASCADE;
+            ADD CONSTRAINT fk_character_episode_episode FOREIGN KEY (episodeEntityName) REFERENCES episode_entity (name) ON DELETE CASCADE ON UPDATE CASCADE;
     `);
   }
 

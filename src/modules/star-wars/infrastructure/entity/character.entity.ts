@@ -24,6 +24,9 @@ export class CharacterEntity {
   episodes: EpisodeEntity[]
 
   @ManyToOne(() => PlanetEntity, { cascade: true })
-  @JoinColumn()
+  @JoinColumn({ referencedColumnName: 'name', foreignKeyConstraintName: 'fk_character_planet' })
   planet: PlanetEntity
+
+  @Column({ type: 'timestamp', nullable: true })
+  deleted: Date
 }

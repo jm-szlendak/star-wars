@@ -36,6 +36,9 @@ export class StarWarsController {
             $ref: getSchemaPath(Character),
           },
         },
+        totalCount: {
+          type: 'integer'
+        }
       },
     }
   })
@@ -66,7 +69,7 @@ export class StarWarsController {
     return this.charactersRepository.get(id)
   }
 
-  @Patch('characters/:id')
+  @Patch('characters/:characterId')
   @ApiOperation({ summary: 'Update character' })
   @ApiParam({ name: 'characterId', description: 'Character ID' })
   @ApiResponse({
@@ -84,7 +87,16 @@ export class StarWarsController {
   @ApiOperation({ summary: 'Create new character' })
   @ApiParam({ name: 'characterId', description: 'Character ID' })
   @ApiResponse({
-    status: 201
+    status: 201,
+    description: 'ID of created character',
+    schema: {
+      type: 'object',
+      properties: {
+        data: {
+          type: 'integer',
+        },
+      },
+    }
   })
   async createCharacter(
     @Body() dto: CreateOrUpdateCharacterDto,
@@ -92,7 +104,7 @@ export class StarWarsController {
     return this.charactersRepository.create(dto)
   }
 
-  @Delete('characters/:id')
+  @Delete('characters/:characterId')
   @ApiOperation({ summary: 'Delete character' })
   @ApiResponse({
     status: 200

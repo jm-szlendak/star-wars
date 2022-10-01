@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Exclude } from 'class-transformer';
 import { Episode } from './episode';
 import { Planet } from './planet';
 
@@ -14,4 +15,7 @@ export class Character {
 
   @ApiProperty({ type: Planet, nullable: true })
   planet: Planet | null
+
+  @Exclude()
+  deleted: Date
 }

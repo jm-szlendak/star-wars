@@ -41,12 +41,12 @@ describe('StarWarsController', () => {
   describe('GET /star-wars/characters', () => {
     it('should use repository to query characters', async () => {
       const mockCharacters = [{}] as Character[]
-      jest.spyOn(repository, 'getMany').mockResolvedValue(mockCharacters);
+      jest.spyOn(repository, 'getMany').mockResolvedValue({ characters: mockCharacters, totalCount: 1 });
       const page = 3
       const pageSize = 10;
       const result = await controller.getAllCharacters({ page, pageSize });
 
-      expect(result).toBe(mockCharacters)
+      expect(result).toEqual({ characters: mockCharacters, totalCount: 1 })
       expect(repository.getMany).toHaveBeenCalledWith(page, pageSize)
     });
   });
@@ -66,7 +66,7 @@ describe('StarWarsController', () => {
   describe('POST /star-wars/characters', () => {
     it('should use repository to insert character', async () => {
       jest.spyOn(repository, 'create').mockResolvedValue(null);
-      const dto: CreateOrUpdateCharacterDto = { name: 'test', episodes: ['one'], planet: 'mars' }
+      const dto: CreateOrUpdateCharacterDto = { name: 'test', episodes: [{ name: 'one' }], planet: { name: 'mars' } }
       await controller.createCharacter(dto);
 
       expect(repository.create).toHaveBeenCalledWith(dto)
@@ -76,7 +76,7 @@ describe('StarWarsController', () => {
   describe('PATCH /star-wars/characters/:id', () => {
     it('should use repository to update character', async () => {
       jest.spyOn(repository, 'update').mockResolvedValue(null);
-      const dto: CreateOrUpdateCharacterDto = { name: 'test', episodes: ['one'], planet: 'mars' }
+      const dto: CreateOrUpdateCharacterDto = { name: 'test', episodes: [{ name: 'one' }], planet: { name: 'mars' } }
       const id = 1
       await controller.updateCharacter(id, dto);
 

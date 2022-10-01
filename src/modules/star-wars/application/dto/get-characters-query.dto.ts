@@ -6,7 +6,7 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 
-const minPageSize = 10;
+const minPageSize = 1;
 const maxPageSize = 100;
 
 export class GetCharactersQueryDto {
